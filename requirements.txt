@@ -1,0 +1,25 @@
+# Smart AI Diet & Meal Optimization System
+# Install: pip install -r requirements.txt
+
+# Core
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.11.0
+
+# Machine Learning
+scikit-learn>=1.3.0
+torch>=2.0.0
+joblib>=1.3.0
+
+# Optimization
+pulp>=2.7.0
+
+# API
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+python-multipart>=0.0.6
+httpx>=0.25.0
+
+# Testing
+pytest>=7.4.0

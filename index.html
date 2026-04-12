@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NutriAI — Smart Diet Optimizer</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- ── Background canvas ─────────────────────────────────────── -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow g1"></div>
+  <div class="bg-glow g2"></div>
+
+  <!-- ── Header ────────────────────────────────────────────────── -->
+  <header>
+    <div class="logo">
+      <span class="logo-mark">⬡</span>
+      <span>NutriAI</span>
+    </div>
+    <nav>
+      <button class="nav-tab active" data-section="planner">Meal Planner</button>
+      <button class="nav-tab" data-section="search">Food Search</button>
+      <button class="nav-tab" data-section="feedback">Feedback</button>
+    </nav>
+    <div id="status-badge" class="status-badge loading">
+      <span class="dot"></span> Connecting…
+    </div>
+  </header>
+
+  <!-- ── Main ──────────────────────────────────────────────────── -->
+  <main>
+
+    <!-- ═══ SECTION: Planner ═══════════════════════════════════ -->
+    <section id="section-planner" class="section active">
+
+      <div class="two-col">
+
+        <!-- Left: Input Form -->
+        <div class="card form-card">
+          <div class="card-eyebrow">Step 1</div>
+          <h2 class="card-title">Your Profile</h2>
+          <p class="card-sub">Tell the AI about you — it predicts your ideal macros.</p>
+
+          <form id="profile-form" autocomplete="off">
+            <div class="form-row">
+              <div class="field">
+                <label>Name</label>
+                <input type="text" id="f-name" value="Ahmed" required />
+              </div>
+              <div class="field">
+                <label>User ID</label>
+                <input type="number" id="f-uid" value="1" min="1" required />
+              </div>
+            </div>
+
+            <div class="form-row three">
+              <div class="field">
+                <label>Age</label>
+                <input type="number" id="f-age" value="30" min="10" max="100" required />
+              </div>
+              <div class="field">
+                <label>Weight (kg)</label>
+                <input type="number" id="f-weight" value="80" min="30" max="300" step="0.1" required />
+              </div>
+              <div class="field">
+                <label>Height (cm)</label>
+                <input type="number" id="f-height" value="175" min="100" max="250" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Gender</label>
+                <select id="f-gender">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="non_binary">Non-binary</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Activity Level</label>
+                <select id="f-activity">
+                  <option value="sedentary">Sedentary</option>
+                  <option value="light">Light</option>
+                  <option value="moderate" selected>Moderate</option>
+                  <option value="active">Active</option>
+                  <option value="very_active">Very Active</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Dietary Goal</label>
+                <select id="f-goal">
+                  <option value="weight_loss">Weight Loss</option>
+                  <option value="muscle_gain">Muscle Gain</option>
+                  <option value="maintenance" selected>Maintenance</option>
+                  <option value="heart_health">Heart Health</option>
+                  <option value="diabetic_control">Diabetic Control</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Diet Type</label>
+                <select id="f-diet">
+                  <option value="omnivore" selected>Omnivore</option>
+                  <option value="vegetarian">Vegetarian</option>
+                  <option value="vegan">Vegan</option>
+                  <option value="keto">Keto</option>
+                  <option value="paleo">Paleo</option>
+                  <option value="mediterranean">Mediterranean</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Food Allergy</label>
+                <select id="f-allergy">
+                  <option value="none" selected>None</option>
+                  <option value="gluten">Gluten</option>
+                  <option value="dairy">Dairy</option>
+                  <option value="nut">Nut</option>
+                  <option value="shellfish">Shellfish</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Meals / Day</label>
+                <select id="f-meals">
+                  <option value="2">2</option>
+                  <option value="3" selected>3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Plan Duration (days)</label>
+                <select id="f-days">
+                  <option value="1">1 day</option>
+                  <option value="3">3 days</option>
+                  <option value="7" selected>7 days</option>
+                  <option value="14">14 days</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="gen-btn">
+              <span class="btn-icon">✦</span>
+              Generate Meal Plan
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Targets + Output -->
+        <div class="right-col">
+
+          <!-- Macro Targets Card -->
+          <div class="card targets-card" id="targets-card" style="display:none">
+            <div class="card-eyebrow">AI Predicted Targets</div>
+            <h3 class="card-title">Your Daily Goals</h3>
+            <div class="macro-grid">
+              <div class="macro-item" style="--accent:#f97316">
+                <div class="macro-val" id="t-kcal">—</div>
+                <div class="macro-label">Calories</div>
+              </div>
+              <div class="macro-item" style="--accent:#3b82f6">
+                <div class="macro-val" id="t-prot">—</div>
+                <div class="macro-label">Protein (g)</div>
+              </div>
+              <div class="macro-item" style="--accent:#a78bfa">
+                <div class="macro-val" id="t-fat">—</div>
+                <div class="macro-label">Fat (g)</div>
+              </div>
+              <div class="macro-item" style="--accent:#34d399">
+                <div class="macro-val" id="t-carbs">—</div>
+                <div class="macro-label">Carbs (g)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spinner -->
+          <div id="spinner" class="spinner-wrap" style="display:none">
+            <div class="spinner"></div>
+            <p>AI optimizing your meal plan…</p>
+          </div>
+
+          <!-- Plan Output -->
+          <div id="plan-output" style="display:none">
+            <div class="plan-header">
+              <h3>📅 Weekly Meal Plan</h3>
+              <button class="btn-ghost" id="grocery-btn">🛒 Get Grocery List</button>
+            </div>
+            <div id="plan-days"></div>
+          </div>
+
+          <!-- Grocery Output -->
+          <div id="grocery-output" style="display:none">
+            <div class="plan-header">
+              <h3>🛒 Grocery List</h3>
+              <div id="grocery-cost" class="grocery-cost-badge"></div>
+            </div>
+            <div id="grocery-categories"></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SECTION: Food Search ══════════════════════════════ -->
+    <section id="section-search" class="section">
+      <div class="card search-card">
+        <div class="card-eyebrow">USDA Database — 25,760 foods</div>
+        <h2 class="card-title">Food Nutrition Search</h2>
+        <div class="search-bar">
+          <input type="text" id="search-input" placeholder="Search for a food… (e.g. chicken, broccoli)" />
+          <button class="btn-primary small" id="search-btn">Search</button>
+        </div>
+        <div id="search-results" class="search-results"></div>
+      </div>
+    </section>
+
+    <!-- ═══ SECTION: Feedback ═════════════════════════════════ -->
+    <section id="section-feedback" class="section">
+      <div class="card feedback-card">
+        <div class="card-eyebrow">Reinforcement Learning</div>
+        <h2 class="card-title">Rate Your Meal</h2>
+        <p class="card-sub">Your feedback retrains the AI to better match your tastes.</p>
+
+        <form id="feedback-form">
+          <div class="form-row">
+            <div class="field">
+              <label>User ID</label>
+              <input type="number" id="fb-uid" value="1" min="1" />
+            </div>
+            <div class="field">
+              <label>Food Category</label>
+              <select id="fb-cat">
+                <option value="1">Dairy & Eggs</option>
+                <option value="5">Poultry</option>
+                <option value="9">Fruits</option>
+                <option value="10">Pork</option>
+                <option value="11">Vegetables</option>
+                <option value="13">Beef</option>
+                <option value="15">Fish & Shellfish</option>
+                <option value="16">Legumes</option>
+                <option value="18">Baked Goods</option>
+                <option value="20">Grains & Pasta</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label>Meal Type</label>
+              <select id="fb-meal">
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch" selected>Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Rating</label>
+            <div class="star-rating" id="star-rating">
+              <button type="button" class="star" data-v="1">★</button>
+              <button type="button" class="star" data-v="2">★</button>
+              <button type="button" class="star" data-v="3">★</button>
+              <button type="button" class="star" data-v="4">★</button>
+              <button type="button" class="star" data-v="5">★</button>
+            </div>
+            <input type="hidden" id="fb-rating" value="0" />
+          </div>
+          <div id="feedback-msg" class="feedback-msg" style="display:none"></div>
+          <button type="submit" class="btn-primary" id="fb-btn" disabled>Submit Rating</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>NutriAI v2 · Smart AI Diet System · USDA FoodData Central · PyTorch + PuLP</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
